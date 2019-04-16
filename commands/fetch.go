@@ -17,7 +17,7 @@ type Config struct {
 	Port int
 }
 
-var fetchCmd = cobra.Command{
+var fetchCmd = &cobra.Command{
 	Use: "fetch",
 	Short: "Fetch feeds",
 	Long: "Bastion will fetch all feeds listed in the config file",
@@ -29,7 +29,7 @@ func init() {
 	viper.BindPFlag("rsstimeout", fetchCmd.Flags().Lookup("rsstimeout"))
 }
 
-func fetchRun(cmd *cobra.Command, arg []string) {
+func fetchRun(cmd *cobra.Command, args []string) {
 
 	Fetcher()
 
@@ -41,7 +41,7 @@ func fetchRun(cmd *cobra.Command, arg []string) {
 func Fetcher() {
 	var config Config
 
-	if err := viper.Marshal(&config); err != nil {
+	if err := viper.Unmarshal(&config); err != nil {
 		fmt.Println(err)
 	}
 
@@ -66,4 +66,12 @@ func PoolFeed(uri string) {
 		fmt.Printf("Sleeping for %d seconds on %s\n", feed.SecondsTillUpdate(), uri)
 		time.Sleep(time.Duration(feed.SecondsTillUpdate() * 1e9))
 	}
+}
+
+func chanHandler(feed *rss.Feed, newchannels []*rss.Channel) {
+	fmt.Printf("%d new channel(s) in %s\n", len(newchannels), feed.Url)
+}
+
+func itemHandler(feed *rss.Feed, ch *rss.Channel, newitems []*rss.Item) {
+	fmt.Printf("%d new item(s) in %s\n", len(newitems), feed.Url)
 }
