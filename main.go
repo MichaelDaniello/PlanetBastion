@@ -1,6 +1,6 @@
 package main
 
-import "github.com/michaeldaniello/planet/commands"
+import "github.com/michaeldaniello/PlanetBastion/commands"
 
 func main() {
 	commands.Execute()

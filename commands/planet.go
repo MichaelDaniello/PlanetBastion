@@ -9,14 +9,17 @@ import (
 )
 
 var RootCmd = &cobra.Command{
-	Use: "Bastion",
+	Use:   "Bastion",
 	Short: "Bastion is an awesome planet style RSS aggregator",
 	Long: `Bastion provides planet style RSS aggregation.
 	It is inspired by python planet and has a simple YAML configuration
 	and provides it's own web server`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Bastion runs")
-	},
+	Run: rootRun,
+}
+
+func rootRun(cmd *cobra.Command, args []string) {
+	fmt.Println(viper.Get("feeds"))
+	fmt.Println(viper.GetString("appname"))
 }
 
 func Execute() {
@@ -31,7 +34,7 @@ var CfgFile string
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	RootCmd.PersistentFlags().StringVar(&CfgFile, "config", "", "config file (default is " +
+	RootCmd.PersistentFlags().StringVar(&CfgFile, "config", "", "config file (default is "+
 		"$HOME/.bastion/config.yaml")
 }
 
